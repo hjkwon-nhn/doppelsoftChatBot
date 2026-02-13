@@ -6,11 +6,8 @@ import os
 # load_dotenv()
 # client = OpenAI()
 
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-VECTOR_STORE_ID = st.secrets["VECTOR_STORE_ID"]
 
 # OpenAI 클라이언트 초기화 (API 키 명시)
-client = OpenAI(api_key=OPENAI_API_KEY)
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # .env에서 Vector Store ID 가져오기
