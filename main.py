@@ -4,7 +4,8 @@ import streamlit as st
 import os
 
 # load_dotenv()
-client = OpenAI()
+# client = OpenAI()
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 # .env에서 Vector Store ID 가져오기
 # VECTOR_STORE_ID = os.getenv("VECTOR_STORE_ID")
