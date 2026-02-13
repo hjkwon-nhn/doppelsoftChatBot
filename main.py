@@ -4,13 +4,11 @@ import streamlit as st
 import os
 
 # load_dotenv()
-# client = OpenAI()
+client = OpenAI()
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-VECTOR_STORE_ID = os.getenv("VECTOR_STORE_ID")
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# VECTOR_STORE_ID = os.getenv("VECTOR_STORE_ID")
 
-# OpenAI 클라이언트 초기화 (API 키 명시)
-client = OpenAI(api_key=OPENAI_API_KEY)
 
 # 페이지 설정
 st.set_page_config(
