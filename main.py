@@ -7,7 +7,7 @@ import os
 client = OpenAI()
 
 # OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-# VECTOR_STORE_ID = os.getenv("VECTOR_STORE_ID")
+VECTOR_STORE_ID = os.getenv("VECTOR_STORE_ID")
 
 
 # 페이지 설정
