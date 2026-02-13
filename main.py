@@ -7,7 +7,7 @@ import os
 client = OpenAI()
 
 # .env에서 Vector Store ID 가져오기
-VECTOR_STORE_ID = os.getenv("VECTOR_STORE_ID")
+# VECTOR_STORE_ID = os.getenv("VECTOR_STORE_ID")
 
 # 페이지 설정
 st.set_page_config(
