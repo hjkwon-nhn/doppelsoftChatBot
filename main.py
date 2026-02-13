@@ -1,14 +1,10 @@
 from openai import OpenAI
 import streamlit as st
-# from dotenv import load_dotenv
 import os
 
-# load_dotenv()
-client = OpenAI()
-
-# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# 환경변수에서 자동 로드 (Streamlit Cloud Advanced Settings)
+client = OpenAI()  # OPENAI_API_KEY 자동 읽음
 VECTOR_STORE_ID = os.getenv("VECTOR_STORE_ID")
-
 
 # 페이지 설정
 st.set_page_config(
@@ -34,12 +30,10 @@ st.info("""
 
 # Vector Store ID 확인
 if not VECTOR_STORE_ID:
-    st.error("⚠️ Vector Store ID가 설정되지 않았습니다!")
+    st.error("⚠️ VECTOR_STORE_ID가 설정되지 않았습니다!")
     st.info("""
-    ### .env 파일 설정 방법:
-    
-    프로젝트 폴더에 `.env` 파일을 만들고 아래 내용을 추가하세요:
-    
+    ### Environment Variables 설정:
+    Advanced Settings → Environment variables에 추가:
     ```
     OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxx
     VECTOR_STORE_ID=vs_xxxxxxxxxxxxx
@@ -136,9 +130,10 @@ if prompt:
     # 지난 대화가 없을 때
     if 'response_id' not in st.session_state:
         with st.spinner('답변 생성 중...'):
-            response = client.responses.create(
-                model="gpt-4o-mini",
-                instructions="""당신은 도플소프트의 공식 고객지원 AI 어시스턴트입니다.
+            try:
+                response = client.responses.create(
+                    model="gpt-4o-mini",
+                    instructions="""당신은 도플소프트의 공식 고객지원 AI 어시스턴트입니다.
 
 [회사 정보]
 도플소프트는 다음 3가지 대중교통 앱을 서비스합니다:
@@ -167,20 +162,25 @@ if prompt:
 [답변할 수 없는 경우]
 블로그에서 관련 정보를 찾을 수 없습니다. 더 구체적인 질문을 주시거나, 
 고객센터(이메일/전화)로 문의해주세요.""",
-                input=enhanced_prompt,
-                tools=[{
-                    "type": "file_search",
-                    "vector_store_ids": [VECTOR_STORE_ID]
-                }]
-            )
+                    input=enhanced_prompt,
+                    tools=[{
+                        "type": "file_search",
+                        "vector_store_ids": [VECTOR_STORE_ID]
+                    }]
+                )
+            except Exception as e:
+                st.error(f"❌ 오류가 발생했습니다: {str(e)}")
+                st.info("환경변수가 올바르게 설정되었는지 확인해주세요.")
+                st.stop()
     
     # 지난 대화가 있을 때
     else:
         with st.spinner('답변 생성 중...'):
-            response = client.responses.create(
-                previous_response_id=st.session_state.response_id,
-                model="gpt-4o-mini",
-                instructions="""당신은 도플소프트의 공식 고객지원 AI 어시스턴트입니다.
+            try:
+                response = client.responses.create(
+                    previous_response_id=st.session_state.response_id,
+                    model="gpt-4o-mini",
+                    instructions="""당신은 도플소프트의 공식 고객지원 AI 어시스턴트입니다.
 
 [회사 정보]
 도플소프트는 다음 3가지 대중교통 앱을 서비스합니다:
@@ -209,12 +209,15 @@ if prompt:
 [답변할 수 없는 경우]
 블로그에서 관련 정보를 찾을 수 없습니다. 더 구체적인 질문을 주시거나, 
 고객센터(이메일/전화)로 문의해주세요.""",
-                input=enhanced_prompt,
-                tools=[{
-                    "type": "file_search",
-                    "vector_store_ids": [VECTOR_STORE_ID]
-                }]
-            )
+                    input=enhanced_prompt,
+                    tools=[{
+                        "type": "file_search",
+                        "vector_store_ids": [VECTOR_STORE_ID]
+                    }]
+                )
+            except Exception as e:
+                st.error(f"❌ 오류가 발생했습니다: {str(e)}")
+                st.stop()
 
     # LLM 답변 출력
     with st.chat_message('assistant'):
